@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bank.gui.LoginController">
+    <stylesheets>
+        <URL value="@login.css" />
+    </stylesheets>
+   <children>
+      <AnchorPane prefHeight="230.0" prefWidth="600.0" AnchorPane.bottomAnchor="370.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="279.0" prefWidth="531.0" spacing="10.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="40.0">
+               <children>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="8.0" layoutY="71.0" text="Account naam">
+                           <font>
+                              <Font size="20.0" />
+                           </font></Label>
+                        <TextField fx:id="tfAccount" layoutX="10.0" layoutY="96.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" />
+                        <Label layoutX="10.0" layoutY="141.0" text="Wachtwoord">
+                           <font>
+                              <Font size="20.0" />
+                           </font></Label>
+                        <TextField fx:id="tfPassword" layoutX="10.0" layoutY="166.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <HBox layoutX="50.0" layoutY="300.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
+         <children>
+            <Button fx:id="btLogin" mnemonicParsing="false" onAction="#login" prefHeight="50.0" prefWidth="200.0" text="Inloggen">
+               <font>
+                  <Font size="20.0" />
+               </font></Button>
+            <Button fx:id="btAccount" mnemonicParsing="false" onAction="#openAccount" prefHeight="50.0" prefWidth="200.0" text="Nieuwe Rekening">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets left="20.0" />
+               </HBox.margin>
+               <font>
+                  <Font size="20.0" />
+               </font></Button>
+         </children>
+      </HBox>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
+         <children>
+            <Label text="Mededelingen">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+            <TextArea fx:id="taMessages" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

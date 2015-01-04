@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="602.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bank.server.BalieController">
+    <stylesheets>
+        <URL value="@balie.css" />
+    </stylesheets>
+   <children>
+      <VBox layoutX="10.0" layoutY="10.0" prefHeight="235.0" prefWidth="600.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
+         <children>
+            <GridPane hgap="15.0" vgap="15.0">
+               <children>
+                  <Label prefHeight="30.0" prefWidth="149.0" text="Bank:" GridPane.rowIndex="1">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <ComboBox fx:id="cbSelectBank1" onAction="#selectBank" prefHeight="26.0" prefWidth="400.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label prefHeight="25.0" prefWidth="312.0" text="Selecteer bank" GridPane.columnSpan="2147483647">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="256.0" minWidth="10.0" prefWidth="84.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="475.0" minWidth="10.0" prefWidth="421.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </VBox>
+      <VBox layoutX="45.0" layoutY="295.0" prefHeight="89.0" prefWidth="4822.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0">
+         <children>
+            <Label text="Mededelingen">
+               <font>
+                  <Font size="20.0" />
+               </font></Label>
+            <TextArea fx:id="taMessage" layoutX="29.0" layoutY="288.0" minHeight="100.0" prefHeight="100.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
