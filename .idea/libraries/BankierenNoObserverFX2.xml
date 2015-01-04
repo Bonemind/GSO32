@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="BankierenNoObserverFX">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/BankierenNoObserverFX.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,5 +1,10 @@
 package bank.bankieren;
 
+import bank.observer.IRemoteObserver;
+
+import java.rmi.RemoteException;
+import java.util.*;
+
 class Rekening implements IRekeningTbvBank {
 
     private static final long serialVersionUID = 7221569686169173632L;
@@ -7,6 +12,7 @@ class Rekening implements IRekeningTbvBank {
     private int nr;
     private IKlant eigenaar;
     private Money saldo;
+    private ArrayList<IRemoteObserver> observerList;
 
     /**
      * creatie van een bankrekening met saldo van 0.0<br>
@@ -19,6 +25,7 @@ class Rekening implements IRekeningTbvBank {
      */
     Rekening(int number, IKlant klant, String currency) {
         this(number, klant, new Money(0, currency));
+        observerList = new ArrayList<>();
     }
 
     /**
@@ -66,15 +73,46 @@ class Rekening implements IRekeningTbvBank {
             throw new RuntimeException(" bedrag = 0 bij aanroep 'muteer'");
         }
 
+        System.out.println("Muteer");
         if (isTransferPossible(bedrag)) {
             saldo = Money.sum(saldo, bedrag);
+            notifyObservers();
             return true;
         }
+        notifyObservers();
         return false;
     }
 
     @Override
     public int getKredietLimietInCenten() {
         return KREDIETLIMIET;
+    }
+
+    @Override
+    public void addObserver(IRemoteObserver observer) {
+        System.out.println("Observerlist before:" + observerList.size());
+        if (observerList.contains(observer)) {
+            return;
+        }
+        observerList.add(observer);
+        System.out.println("Observerlist after:" + observerList.size());
+    }
+
+    @Override
+    public void removeObserver(IRemoteObserver observer) {
+        if (observerList.contains(observer)) {
+            observerList.remove(observer);
+        }
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (IRemoteObserver ro : observerList) {
+            try {
+                ro.update(this, null);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

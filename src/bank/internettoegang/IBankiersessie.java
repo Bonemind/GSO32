@@ -2,14 +2,17 @@ package bank.internettoegang;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+
 import bank.bankieren.IRekening;
 import bank.bankieren.Money;
+import bank.observer.IRemoteObservable;
+import bank.observer.IRemoteObserver;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
 
-public interface IBankiersessie extends Remote {
+public interface IBankiersessie extends Remote, IRemoteObservable, IRemoteObserver {
 	
-	long GELDIGHEIDSDUUR = 6000;
+	long GELDIGHEIDSDUUR = 600000;
 	/**
 	 * @returns true als de laatste aanroep van getRekening of maakOver voor deze
 	 *          sessie minder dan GELDIGHEIDSDUUR geleden is

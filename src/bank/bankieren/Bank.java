@@ -2,7 +2,6 @@ package bank.bankieren;
 
 import fontys.util.*;
 
-import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 

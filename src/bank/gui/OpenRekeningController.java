@@ -6,7 +6,7 @@
 package bank.gui;
 
 import bank.internettoegang.IBalie;
-import bank.internettoegang.IBankiersessie;
+
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;

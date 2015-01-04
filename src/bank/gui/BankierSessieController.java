@@ -9,17 +9,18 @@ import bank.bankieren.IRekening;
 import bank.bankieren.Money;
 import bank.internettoegang.IBalie;
 import bank.internettoegang.IBankiersessie;
+import bank.observer.IRemoteObserver;
+import bank.observer.RemoteObserver;
 import fontys.util.InvalidSessionException;
 import fontys.util.NumberDoesntExistException;
+
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,6 +72,9 @@ public class BankierSessieController implements Initializable {
             String eigenaar = rekening.getEigenaar().getNaam() + " te "
                     + rekening.getEigenaar().getPlaats();
             tfNameCity.setText(eigenaar);
+            IRemoteObserver oc = new RemoteObserver(this);
+            UnicastRemoteObject.exportObject(oc, 0);
+            sessie.addObserver(oc);
         } catch (InvalidSessionException ex) {
             taMessage.setText("bankiersessie is verlopen");
             Logger.getLogger(BankierSessieController.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,5 +119,20 @@ public class BankierSessieController implements Initializable {
             e1.printStackTrace();
             taMessage.setText(e1.getMessage());
         }
+    }
+
+    public void refreshBalance() throws InvalidSessionException, RemoteException {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    tfBalance.setText(sessie.getRekening().getSaldo() + "");
+                } catch (InvalidSessionException e) {
+                    e.printStackTrace();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

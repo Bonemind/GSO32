@@ -9,7 +9,6 @@ import bank.internettoegang.IBalie
 import bank.internettoegang.IBankiersessie
 import fontys.util.InvalidSessionException
 import fontys.util.NumberDoesntExistException
-import groovy.util.GroovyTestCase
 
 import java.rmi.NoSuchObjectException
 import java.rmi.server.ExportException

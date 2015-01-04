@@ -1,10 +1,12 @@
 package bank.bankieren;
 
 
-import java.io.Serializable;
-import java.util.Observable;
+import bank.observer.IObservable;
+import bank.observer.IRemoteObservable;
 
-public interface IRekening extends Serializable {
+import java.io.Serializable;
+
+public interface IRekening extends Serializable, IObservable {
   int getNr();
   Money getSaldo();
   IKlant getEigenaar();
