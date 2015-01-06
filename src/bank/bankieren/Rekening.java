@@ -79,7 +79,6 @@ class Rekening implements IRekeningTbvBank {
             notifyObservers();
             return true;
         }
-        notifyObservers();
         return false;
     }
 

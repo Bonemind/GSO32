@@ -59,7 +59,6 @@ public class Bankiersessie extends UnicastRemoteObject implements
 		if (!isGeldig()) {
 			throw new InvalidSessionException("session has been expired");
 		}
-        notifyObservers();
 		laatsteAanroep = System.currentTimeMillis();
 	}
 
