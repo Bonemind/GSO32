@@ -6,6 +6,8 @@
 package bank.server;
 
 import bank.bankieren.Bank;
+import bank.bankieren.IBank;
+import bank.bankieren.ITransferCentral;
 import bank.gui.BankierClient;
 import bank.internettoegang.Balie;
 import bank.internettoegang.IBalie;
@@ -13,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,20 +62,33 @@ public class BalieServer extends Application {
             try {
                 this.nameBank = nameBank;
                 String address = java.net.InetAddress.getLocalHost().getHostAddress();
-                int port = 1099;
+                int port = 1100;
+
+                // Get the remote transfer central.
+                ITransferCentral transferCentral = (ITransferCentral) Naming.lookup("rmi://" + address + ":1098" + "/central");
+
+                // Setup this bank.
                 Properties props = new Properties();
-                String rmiBalie = address + ":" + port + "/" + nameBank;
+                String rmiBalie = "rmi://" + address + ":" + port + "/" + nameBank;
                 props.setProperty("balie", rmiBalie);
                 out = new FileOutputStream(nameBank + ".props");
                 props.store(out, null);
                 out.close();
                 java.rmi.registry.LocateRegistry.createRegistry(port);
-                IBalie balie = new Balie(new Bank(nameBank));
-                Naming.rebind(nameBank, balie);
+                IBank bank = new Bank(nameBank, transferCentral);
+                IBalie balie = new Balie(bank);
+                System.out.println(nameBank);
+                Naming.rebind(rmiBalie, balie);
+
+                // Register the bank with the transfer central.
+                IBank stub = (IBank) UnicastRemoteObject.exportObject(bank, 0);
+                transferCentral.register(stub);
                
                 return true;
 
             } catch (IOException ex) {
+                Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotBoundException ex) {
                 Logger.getLogger(BalieServer.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 try {

@@ -2,6 +2,8 @@ package bank.bankieren;
 
 import fontys.util.*;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 
@@ -16,15 +18,17 @@ public class Bank implements IBank {
 	private volatile int nieuwReknr;
 	private AtomicIntegerFieldUpdater<Bank> integerFieldUpdater = AtomicIntegerFieldUpdater.newUpdater(Bank.class, "nieuwReknr");
 	private String name;
+    private ITransferCentral transferCentral;
 
-	public Bank(String name) {
+	public Bank(String name, ITransferCentral transferCentral) {
 		accounts = new HashMap<Integer,IRekeningTbvBank>();
 		clients = new ArrayList<IKlant>();
 		nieuwReknr = 100000000;	
-		this.name = name;	
+		this.name = name;
+        this.transferCentral = transferCentral;
 	}
 
-	public int openRekening(String name, String city) {
+	public int openRekening(String name, String city) throws RemoteException {
 		if (name.equals("") || city.equals(""))
 			return -1;
 
@@ -38,7 +42,7 @@ public class Bank implements IBank {
 		return integerFieldUpdater.get(this) - 1;
 	}
 
-	private IKlant getKlant(String name, String city) {
+	private IKlant getKlant(String name, String city) throws RemoteException {
 		for (IKlant k : clients) {
 			if (k.getNaam().equals(name) && k.getPlaats().equals(city))
 				return k;
@@ -50,12 +54,12 @@ public class Bank implements IBank {
 		return klant;
 	}
 
-	public IRekening getRekening(int nr) {
+	public IRekening getRekening(int nr) throws RemoteException {
 		return accounts.get(nr);
 	}
 
 	public boolean maakOver(int source, int destination, Money money)
-			throws NumberDoesntExistException {
+			throws RemoteException, NumberDoesntExistException {
 		if (source == destination)
 			throw new RuntimeException(
 					"cannot transfer money to your own account");
@@ -68,26 +72,36 @@ public class Bank implements IBank {
 				throw new NumberDoesntExistException("account " + source
 						+ " unknown at " + name);
 
+            // Schrijf het bedrag af van de bron rekening.
 			Money negative = Money.difference(new Money(0, money.getCurrency()),
 					money);
-			boolean success = source_account.muteer(negative);
-			if (!success)
+			if (!source_account.muteer(negative))
 				return false;
 
-			IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(destination);
-			if (dest_account == null)
-				throw new NumberDoesntExistException("account " + destination
-						+ " unknown at " + name);
-			success = dest_account.muteer(money);
+            // Schrijf het bedrag bij bij de bestemming.
+            try {
+                transferCentral.maakOver(destination, money);
+            } catch (NumberDoesntExistException ex) {
+                // Als het bijschrijven niet gelukt is wordt het bedrag terug gestort op de begin rekening.
+                source_account.muteer(money);
+                return false;
+            }
 
-			if (!success) // rollback
-				source_account.muteer(money);
-			return success;
+			return true;
 		}
 	}
 
-	@Override
-	public String getName() {
+    @Override
+    public void maakOver(int bestemming, Money bedrag) throws RemoteException, NumberDoesntExistException {
+        IRekeningTbvBank dest_account = (IRekeningTbvBank) getRekening(bestemming);
+        if (dest_account == null)
+            throw new NumberDoesntExistException("account " + bestemming
+                    + " unknown at " + name);
+        dest_account.muteer(bedrag);
+    }
+
+    @Override
+	public String getName() throws RemoteException {
 		return name;
 	}
 
