@@ -17,7 +17,9 @@ import java.io.InputStream;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.Properties;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
@@ -39,9 +41,11 @@ public class BalieServer extends Application {
     private final double MINIMUM_WINDOW_WIDTH = 600.0;
     private final double MINIMUM_WINDOW_HEIGHT = 200.0;
     private String nameBank;
+    private Random random;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+        random = new Random();
 
         try {
             stage = primaryStage;
@@ -62,7 +66,8 @@ public class BalieServer extends Application {
             try {
                 this.nameBank = nameBank;
                 String address = java.net.InetAddress.getLocalHost().getHostAddress();
-                int port = 1100;
+                //Pick a random port out of the assigned range
+                int port = random.nextInt(3000) + 1100;
 
                 // Get the remote transfer central.
                 ITransferCentral transferCentral = (ITransferCentral) Naming.lookup("rmi://" + address + ":1098" + "/central");

@@ -19,11 +19,14 @@ public class Bank implements IBank {
 	private AtomicIntegerFieldUpdater<Bank> integerFieldUpdater = AtomicIntegerFieldUpdater.newUpdater(Bank.class, "nieuwReknr");
 	private String name;
     private ITransferCentral transferCentral;
+    private Random random;
+
 
 	public Bank(String name, ITransferCentral transferCentral) {
+        random = new Random();
 		accounts = new HashMap<Integer,IRekeningTbvBank>();
 		clients = new ArrayList<IKlant>();
-		nieuwReknr = 100000000;	
+		nieuwReknr = random.nextInt(Integer.MAX_VALUE);
 		this.name = name;
         this.transferCentral = transferCentral;
 	}
@@ -38,8 +41,9 @@ public class Bank implements IBank {
 			accounts.put(nieuwReknr, account);
 		}
 
-		integerFieldUpdater.getAndIncrement(this);
-		return integerFieldUpdater.get(this) - 1;
+        int tmp = nieuwReknr;
+        nieuwReknr = random.nextInt(Integer.MAX_VALUE);
+		return tmp;
 	}
 
 	private IKlant getKlant(String name, String city) throws RemoteException {
